@@ -10,10 +10,10 @@ var express = require('express');
 // vytvoříme aplikaci založenou na expressu
 var app = express();
 
-// nastavíme port
+// zvolíme port
 const PORT = 8080;
 
-// GET /
+// když server obdrží požadavek `GET /`
 app.get('/', function(req, res) {
 	res.send('Hello world');
 });
@@ -23,6 +23,8 @@ app.listen(PORT, function() {
 	console.log('Server běží na adrese http://localhost:' + PORT);
 });
 ```
+
+> Když prohlížeč něco po serveru chce, první, co mu řekne, bude dvojice `METODA adresa`. Metod je několik, nejčastěji se používají `GET` a `POST`, přičemž `GET` je výchozí, `POST` obvykle používají formuláře. Server se podle toho, jakou metodu a adresu obdrží rozhodne, co dál udělá.
 
 Mít webový server, který pořád jen vypisuje ten stejný text je trochu nudné, zkusme tedy vytvořit jednoduchou návštěvní knihu.
 
@@ -59,16 +61,19 @@ var express = require('express');
 // vytvoříme aplikaci založenou na expressu
 var app = express();
 
+// potřebné pro zpracování odeslaných formulářů
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 
+// sem budeme ukládat zprávy
 var zpravy = [];
 
-// nastavíme port
+// zvolíme port
 const PORT = 8080;
 
-// GET /
+// když server obdrží požadavek `GET /`
 app.get('/', function(req, res) {
+	// vypíšeme začátek stránky s formulářem
 	res.write(`
 <!doctype html>
 <html>
@@ -85,24 +90,30 @@ app.get('/', function(req, res) {
 
 <ul>
 `);
+
+	// postupně vypíšeme všechny zprávy
 	for (var zprava of zpravy) {
-		res.write(`<li title="${zprava.datum}"><strong>${zprava.jmeno}</strong> ${zprava.zprava}</li>`);
+		res.write('<li title="' + zprava.datum + '"><strong>' + zprava.jmeno + '</strong> ' + zprava.zprava + '</li>');
 	}
 	res.write(`
 </ul>
 </body>
 </html>
 `);
+	// už je to všechno :-)
 	res.end();
 });
 
+// když server obdrží požadavek `POST /`
 app.post('/', function(req, res) {
-	if (!req.body.jmeno) {
+	if (!req.body.jmeno) { // není zadané jméno
 		res.send('Zadej jméno');
-	} else if (!req.body.zprava) {
+	} else if (!req.body.zprava) { // není zadaná zpráva
 		res.send('Zadej zprávu');
-	} else {
+	} else { // oboje je vyplněné
+		// přidáme do seznamu zpráv novou zprávu
 		zpravy.push({jmeno: req.body.jmeno, zprava: req.body.zprava, datum: new Date()});
+		// přesměrujeme zpět na úvodní stránku
 		res.redirect('/');
 	}
 });
@@ -112,3 +123,12 @@ app.listen(PORT, function() {
 	console.log('Server běží na adrese http://localhost:' + PORT);
 });
 ```
+
+> Krátký přehled metod:
+>
+> * res.write(text) – pošle prohlížeči text
+> * res.end() – ukončí komunikaci s prohlížečem
+> * res.send(text) – nejdřív pošle text a pak ukončí komunikaci
+> * res.redirect(adresa) – řekne prohlížeči, že má přejít na jinou adresu, **předtím nesmí být poslán žádný text**
+>
+> Více informací v [dokumentaci](http://expressjs.com/4x/api.html#res)
