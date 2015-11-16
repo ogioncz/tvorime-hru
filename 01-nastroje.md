@@ -25,3 +25,5 @@ console.log("Hello world");
 Pokud šlo vše podle plánu, můžeme svůj první javascriptový program spustit napsáním `node index.js`.
 
 ![První spuštění](images/node-hello.png)
+
+V další kapitole se pustíme do jednoduchého [web serveru](02-web-server.md).
