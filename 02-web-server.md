@@ -62,12 +62,14 @@ var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 
+var zpravy = [];
+
 // nastavíme port
 const PORT = 8080;
 
 // GET /
 app.get('/', function(req, res) {
-	res.send(`
+	res.write(`
 <!doctype html>
 <html>
 <head>
@@ -80,14 +82,28 @@ app.get('/', function(req, res) {
 <textarea name="zprava"></textarea>
 <button type="submit">Odeslat</button>
 </form>
+
+<ul>
+`);
+	for (var zprava of zpravy) {
+		res.write(`<li title="${zprava.datum}"><strong>${zprava.jmeno}</strong> ${zprava.zprava}</li>`);
+	}
+	res.write(`
+</ul>
 </body>
 </html>
 `);
+	res.end();
 });
 
 app.post('/', function(req, res) {
-	if (req.body) {
-		res.send('Ahoj ' + req.body.jmeno);
+	if (!req.body.jmeno) {
+		res.send('Zadej jméno');
+	} else if (!req.body.zprava) {
+		res.send('Zadej zprávu');
+	} else {
+		zpravy.push({jmeno: req.body.jmeno, zprava: req.body.zprava, datum: new Date()});
+		res.redirect('/');
 	}
 });
 
