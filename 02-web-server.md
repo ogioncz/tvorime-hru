@@ -39,6 +39,7 @@ app.get('/', function(req, res) {
 </head>
 <body>
 <form action="" method="post">
+<input type="text" name="jmeno">
 <textarea name="zprava"></textarea>
 <button type="submit">Odeslat</button>
 </form>
@@ -49,3 +50,49 @@ app.get('/', function(req, res) {
 ```
 
 > V JavaScriptu existuje několik způsobů zápisu textového řetězce. Lze použít jednoduché uvozovky (apostrofy) `'text'`, dvojité uvozovky `"text"` nebo *backtick*y („zpětné apostrofy“) `` `text` ``. Zpětné apostrofy jsou v JavaScriptu celkem nové (ale [moderní prohlížeče](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/template_strings#Browser_compatibility) už je podporují) a mají tu výhodu, že můžou obsahovat i víceřádkový text.
+
+Samozřejmě budeme potřebovat odeslaná data taky zpracovávat, na což budeme potřebovat *bodyParser*, nainstalujeme ho příkazem `npm install body-parser --save`.
+
+```javascript
+// Načteme knihovnu express
+var express = require('express');
+// vytvoříme aplikaci založenou na expressu
+var app = express();
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: false}));
+
+// nastavíme port
+const PORT = 8080;
+
+// GET /
+app.get('/', function(req, res) {
+	res.send(`
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Návštěvní kniha</title>
+</head>
+<body>
+<form action="" method="post">
+<input type="text" name="jmeno">
+<textarea name="zprava"></textarea>
+<button type="submit">Odeslat</button>
+</form>
+</body>
+</html>
+`);
+});
+
+app.post('/', function(req, res) {
+	if (req.body) {
+		res.send('Ahoj ' + req.body.jmeno);
+	}
+});
+
+// Spustíme server na daném PORTu
+app.listen(PORT, function() {
+	console.log('Server běží na adrese http://localhost:' + PORT);
+});
+```
