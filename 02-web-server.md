@@ -1,4 +1,4 @@
-Začneme jednoduchým serverem, který na každé stránce zobrazí Hello world. Protože jsme líní a psaní webového serveru je spousta práce, použijeme Express, který nám ji usnadní.
+Začneme jednoduchým serverem, který na každé stránce zobrazí Hello world. Protože jsme líní a psaní webového serveru je spousta práce, použijeme [Express](http://expressjs.com/), který nám ji usnadní.
 
 Nejprve ve složce s projektem vytvoříme soubor package.json pomocí příkazu `npm init`, stačí jen mačkat <kbd>Enter</kbd>. Pak nainstalujeme Express příkazem `npm install express --save`. Příkaz vytvoří složku node_modules a stáhne do ní Express a dalšé potřebné soubory.
 
@@ -24,7 +24,7 @@ app.listen(PORT, function() {
 });
 ```
 
-> Když prohlížeč něco po serveru chce, první, co mu řekne, bude dvojice `METODA adresa`. Metod je několik, nejčastěji se používají `GET` a `POST`, přičemž `GET` je výchozí, `POST` obvykle používají formuláře. Server se podle toho, jakou metodu a adresu obdrží rozhodne, co dál udělá.
+> Když prohlížeč něco po serveru chce, první, co mu řekne, bude dvojice `METODA adresa`. Metod je několik, nejčastěji se používají `GET` a `POST`, přičemž `GET` je výchozí, `POST` obvykle používají formuláře. Server se podle toho, jakou metodu a adresu obdrží rozhodne, co dál udělá. Podrobnější  vysvětlení je třeba na [wikipedii](https://cs.wikipedia.org/wiki/Hypertext_Transfer_Protocol#.C4.8Cinnost_protokolu).
 
 Mít webový server, který pořád jen vypisuje ten stejný text je trochu nudné, zkusme tedy vytvořit jednoduchou návštěvní knihu.
 
@@ -51,9 +51,9 @@ app.get('/', function(req, res) {
 });
 ```
 
-> V JavaScriptu existuje několik způsobů zápisu textového řetězce. Lze použít jednoduché uvozovky (apostrofy) `'text'`, dvojité uvozovky `"text"` nebo *backtick*y („zpětné apostrofy“) `` `text` ``. Zpětné apostrofy jsou v JavaScriptu celkem nové (ale [moderní prohlížeče](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/template_strings#Browser_compatibility) už je podporují) a mají tu výhodu, že můžou obsahovat i víceřádkový text.
+> V JavaScriptu existuje několik způsobů zápisu textového řetězce. Lze použít jednoduché uvozovky (apostrofy) `'text'`, dvojité uvozovky `"text"` nebo *backtick*y `` `text` ``. Zpětné apostrofy jsou v JavaScriptu [celkem nové](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/template_strings#Browser_compatibility), a mají tu výhodu, že můžou obsahovat i víceřádkový text.
 
-Samozřejmě budeme potřebovat odeslaná data taky zpracovávat, na což budeme potřebovat *bodyParser*, nainstalujeme ho příkazem `npm install body-parser --save`.
+Samozřejmě budeme potřebovat odeslaná data taky zpracovávat, na což budeme potřebovat *[body-parser](https://www.npmjs.com/package/body-parser)*. Nainstalujeme ho příkazem `npm install body-parser --save`.
 
 ```javascript
 // Načteme knihovnu express
