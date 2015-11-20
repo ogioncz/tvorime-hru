@@ -178,3 +178,30 @@ app.get('/', function(req, res) {
 ```
 
 Teď ale musíme vyřešit, jak doprostřed souboru vložit již napsané zprávy. Jednou z možností by bylo rozdělit soubor na více částí (vršek a spodek), ale pokud bychom tam chtěli vkládat nějakou další informaci (třeba počet příspěvků do tagu `<title>`), počet souborů by se rychle rozrostl, což by bylo asi ještě méně přehledné, než mít HTML v JavaScriptových souborech.
+
+Další možností je vložit si do souboru nějakou značku (placeholder), kterou později nahradíme:
+
+```html
+<ul>
+{{{zpravy}}}
+</ul>
+```
+
+```javascript
+app.get('/', function(req, res) {
+	// pošleme prohlížeči hlavičku s typem dokumentu
+	res.set('Content-Type', 'text/html');
+
+	// vytvoříme prázdný řetězec
+	var zpravyHtml ='';
+	// a postupně k němu přidáme HTML jednotlivých zpráv
+	for (var zprava of zpravy) {
+		zpravyHtml += '<li title="' + zprava.datum + '"><strong>' + zprava.jmeno + '</strong> ' + zprava.zprava + '</li>';
+	}
+
+	// převedeme data ze souboru na řetězec a nahradíme placeholder
+	res.send(sablona.toString().replace('{{{zpravy}}}', zpravyHtml));
+});
+```
+
+Právě jsme z HTML souboru udělali „šablonu“.
