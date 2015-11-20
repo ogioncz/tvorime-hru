@@ -159,7 +159,7 @@ Mít HTML kód v JavaScriptových souborech není zrovna nejpřehlednější, p
 </html>
 ```
 
-Při spuštění serveru soubor načteme funkcí readFileSync. Ve většině případů je lepší metoda readFile, tady použijeme pro jednoduchost synchronní verzi. Když takto načíme data ze souboru musíme taky říct prohlížeči, že se jedná o HTML.
+Při spuštění serveru soubor načteme funkcí readFileSync. Ve většině případů je lepší metoda readFile, tady použijeme pro jednoduchost synchronní verzi. Když takto načítáme data ze souboru musíme taky říct prohlížeči, že se jedná o HTML.
 
 ```javascript
 // načteme knihovnu pro práci se soubory
@@ -174,3 +174,5 @@ app.get('/', function(req, res) {
 	res.send(sablona);
 });
 ```
+
+Teď ale musíme vyřešit, jak doprostřed souboru vložit již napsané zprávy. Jednou z možností by bylo rozdělit soubor na více částí (vršek a spodek), ale pokud bychom tam chtěli vkládat nějakou další informaci (třeba počet příspěvků do tagu `<title>`), počet souborů by se rychle rozrostl, což by bylo asi ještě méně přehledné, než mít HTML v JavaScriptových souborech.
