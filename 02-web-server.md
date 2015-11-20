@@ -1,6 +1,8 @@
 Začneme jednoduchým serverem, který na každé stránce zobrazí Hello world. Protože jsme líní a psaní webového serveru je spousta práce, použijeme [Express](http://expressjs.com/), který nám ji usnadní.
 
-Nejprve ve složce s projektem vytvoříme soubor package.json pomocí příkazu `npm init`, stačí jen mačkat <kbd>Enter</kbd>. Pak nainstalujeme Express příkazem `npm install express --save`. Příkaz vytvoří složku node_modules a stáhne do ní Express a dalšé potřebné soubory.
+Nejprve ve složce s projektem vytvoříme soubor package.json pomocí příkazu `npm init`, stačí jen mačkat <kbd>Enter</kbd>. Pak nainstalujeme Express příkazem `npm install express --save`. Příkaz vytvoří složku node_modules a stáhne do ní Express a další potřebné soubory.
+
+## Začínáme
 
 Napíšeme následující kód do souboru index.js a ve složce s projektem spustíme `node index.js`.
 
@@ -25,6 +27,8 @@ app.listen(PORT, function() {
 ```
 
 > Když prohlížeč něco po serveru chce, první, co mu řekne, bude dvojice `METODA adresa`. Metod je několik, nejčastěji se používají `GET` a `POST`, přičemž `GET` je výchozí, `POST` obvykle používají formuláře. Server se podle toho, jakou metodu a adresu obdrží rozhodne, co dál udělá. Podrobnější  vysvětlení je třeba na [wikipedii](https://cs.wikipedia.org/wiki/Hypertext_Transfer_Protocol#.C4.8Cinnost_protokolu).
+
+## Formuláře
 
 Mít webový server, který pořád jen vypisuje ten stejný text je trochu nudné, zkusme tedy vytvořit jednoduchou návštěvní knihu.
 
@@ -132,3 +136,41 @@ app.listen(PORT, function() {
 > * res.redirect(adresa) – řekne prohlížeči, že má přejít na jinou adresu, **předtím nesmí být poslán žádný text**
 >
 > Více informací v [dokumentaci](http://expressjs.com/4x/api.html#res)
+
+## Šablony
+Mít HTML kód v JavaScriptových souborech není zrovna nejpřehlednější, proto obvykle používáme samostatné soubory. Vytvořme tedy soubor `index.html` s následujícím kódem.
+
+```html
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Návštěvní kniha</title>
+</head>
+<body>
+<form action="" method="post">
+<input type="text" name="jmeno">
+<textarea name="zprava"></textarea>
+<button type="submit">Odeslat</button>
+</form>
+<ul>
+</ul>
+</body>
+</html>
+```
+
+Při spuštění serveru soubor načteme funkcí readFileSync. Ve většině případů je lepší metoda readFile, tady použijeme pro jednoduchost synchronní verzi. Když takto načíme data ze souboru musíme taky říct prohlížeči, že se jedná o HTML.
+
+```javascript
+// načteme knihovnu pro práci se soubory
+var fs = require('fs');
+// přečteme soubor
+var sablona = fs.readFileSync('index.html');
+
+app.get('/', function(req, res) {
+	// pošleme prohlížeči hlavičku s typem dokumentu
+	res.set('Content-Type', 'text/html');
+	// pošleme obsah souboru
+	res.send(sablona);
+});
+```
