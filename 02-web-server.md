@@ -6,6 +6,8 @@ Nejprve ve složce s projektem vytvoříme soubor package.json pomocí příkaz
 
 Napíšeme následující kód do souboru index.js a ve složce s projektem spustíme `node index.js`.
 
+> Když budeme chtít server restartovat, stačí stisknout <kbd><kbd>Ctrl</kbd>-<kbd>C</kbd></kbd> a znovu napsat `node index.js`.
+
 ```javascript
 // Načteme knihovnu express
 var express = require('express');
