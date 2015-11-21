@@ -204,4 +204,62 @@ app.get('/', function(req, res) {
 });
 ```
 
-Právě jsme z HTML souboru udělali „šablonu“.
+Právě jsme z HTML souboru udělali primitivní „šablonu“.
+
+Stále tu ale zůstává trocha HTML kódu, ruční nahrazování taky není zrovna nejlepší. Navíc to není ani moc bezpečné, kdokoliv může odeslat třeba takovouto zprávu `<script>alert('kekeke');</script>`. Proto použijeme šablonovací systém
+
+Příkazem `npm install express-handlebars --save` nainstalujeme [handlebars.js](http://handlebarsjs.com/). Proměnnou `sablona` už nebudeme potřebovat a tak ji nahradíme následujícím kódem.
+
+```javascript
+// načteme knihovnu pro práci se šablonami
+var hbs  = require('express-handlebars');
+// přípona šablon bude hbs a výchozí layout bude main.hbs
+app.engine('hbs', hbs({defaultLayout: 'main', extname: '.hbs'}));
+// výchozí šablony budou používat handlebars
+app.set('view engine', 'hbs');
+```
+
+Dále vytvoříme soubor `views/layouts/main.hbs`, který bude obsahovat layout stránky. Pokud neřekneme jinak, naše stránky budou vloženy na místo `{{{body}}}` v této šabloně.
+
+```handlebars
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{title}}</title>
+</head>
+<body>
+{{{body}}}
+</body>
+</html>
+```
+
+Samotnou šablonu, která bude reprezentovat hlavní (a zatím jedinou) stránku uložíme do `views/zpravy.hbs`. `{{#each}}` je vlastně cyklus a pro každou položku seznamu se vytvoří proměnné odpovídající jednotlivým atributům objektu. `{{promenna}}` pak vykreslí proměnnou s ošetřenými HTML tagy.
+
+```handlebars
+<form action="" method="post">
+<input type="text" name="jmeno">
+<textarea name="zprava"></textarea>
+<button type="submit">Odeslat</button>
+</form>
+
+<ul>
+{{#each zpravy}}
+<li title="{{datum}}"><strong>{{jmeno}}</strong> {{zprava}}</li>
+{{/each}}
+</ul>
+```
+
+Samotné vykreslení šablony už je snadné:
+
+```javascript
+app.get('/', function(req, res) {
+	// pošleme prohlížeči hlavičku s typem dokumentu
+	res.set('Content-Type', 'text/html');
+
+	// vykreslíme šablonu zpravy.hbs a předáme jí nějaké proměnné
+	res.render('zpravy', {title: 'Návštěvní kniha', zpravy: zpravy});
+});
+```
+
+No není to pěkné?
