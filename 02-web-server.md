@@ -167,7 +167,7 @@ Při spuštění serveru soubor načteme funkcí readFileSync. Ve většině p�
 // načteme knihovnu pro práci se soubory
 var fs = require('fs');
 // přečteme soubor
-var sablona = fs.readFileSync('index.html');
+var sablona = fs.readFileSync(__dirname + '/index.html');
 
 app.get('/', function(req, res) {
 	// pošleme prohlížeči hlavičku s typem dokumentu
@@ -263,3 +263,26 @@ app.get('/', function(req, res) {
 ```
 
 No není to pěkné?
+
+## Statické soubory
+Poslední věc, která by se mohla hodit je odesílání souborů jako jsou obrázky nebo [externí CSS](https://www.khanacademy.org/computing/computer-programming/html-css/more-ways-to-embed-css/p/using-external-stylesheets).
+
+I zde se nabízí několik možností, nejjednodušší z nich je pro každý soubor napsat vlastní GET handler, který přímo přečte odpovídající soubor, podobně, jako jsme to dělali prvně u HTML souborů.
+
+```javascript
+var fs = require('fs');
+app.get('/files/style.css', function(req, res) {
+	res.set('Content-Type', 'text/css');
+	var data = fs.readFileSync(__dirname +'/files/style.css');
+	res.send(data);
+});
+```
+
+Pokud bychom pracovali s mnoha desítkami souborů, nebylo by to moc pohodlné. Navíc tu ani neřešíme některé pokročilejší věci jako cacheování, takže by se soubory musely načítat pokaždé znovu, i když by se třeba ani nezměnily. Protože tenhle problém se týká naprosté většiny aplikací, má express zabudovaný middleware [static](http://expressjs.com/starter/static-files.html), který to řeší.
+
+```javascript
+// pro adresy začínající na /files použij middleware static
+app.use('/files', express.static(__dirname + '/files'));
+```
+
+Middleware static se vždy koukne, jestli požadovaný soubor ve složce existuje a pokud ano, odešle jeho obsah spolu se správným typem a dalšími rozumnými HTTP hlavičkami.
